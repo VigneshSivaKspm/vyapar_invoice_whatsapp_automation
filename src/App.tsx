@@ -274,24 +274,6 @@ function Sidebar({ page, setPage }: { page: Page; setPage: (p: Page) => void }) 
         ))}
       </nav>
 
-      {/* Firebase badge */}
-      <div className="border-t border-[#30363d] pt-4 space-y-3">
-        <div className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border ${isConfigured ? "border-amber-500/20 bg-amber-500/5" : "border-[#30363d]"}`}>
-          <Icons.firebase />
-          <div className="flex-1 min-w-0">
-            <div className="text-[10px] font-medium text-slate-400">{isConfigured ? "Firebase Connected" : "Firebase Not Connected"}</div>
-          </div>
-          <span className={`size-1.5 rounded-full ${isConfigured ? "bg-amber-400" : "bg-slate-600"}`} />
-        </div>
-
-        <div className="flex items-center gap-2.5 px-2">
-          <div className="size-7 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs font-bold text-emerald-400">A</div>
-          <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium text-white truncate">Admin</div>
-            <div className="text-[10px] text-slate-500 truncate">admin@store.in</div>
-          </div>
-        </div>
-      </div>
     </aside>
   );
 }
@@ -309,7 +291,7 @@ function DashboardPage({ setPage }: { setPage: (p: Page) => void }) {
   const recentActivity = INVOICES.slice(0, 5);
 
   return (
-    <div className="p-6 space-y-6 max-w-5xl">
+    <div className="p-6 lg:p-8 space-y-6 w-full">
       <div>
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
         <p className="text-sm text-slate-400 mt-0.5">Thursday, 21 August 2026</p>
@@ -363,35 +345,6 @@ function DashboardPage({ setPage }: { setPage: (p: Page) => void }) {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Workflow */}
-      <div className="rounded-xl border border-[#30363d] p-5" style={{ background: "#161b22" }}>
-        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Automation Workflow</div>
-        <div className="flex items-center gap-0 overflow-x-auto">
-          {[
-            { icon: "📄", label: "Vyapar", sub: "Generate bill" },
-            { icon: "💾", label: "Download", sub: "Invoice PDF" },
-            { icon: "🤖", label: "Agent", sub: "Detect & extract" },
-            { icon: "⚙️", label: "Backend", sub: "Process & check" },
-            { icon: "🔥", label: "Firebase", sub: "Store customer" },
-            { icon: "💬", label: "WhatsApp", sub: "Send invoice" },
-          ].map((step, i) => (
-            <div key={step.label} className="flex items-center shrink-0">
-              <div className="flex flex-col items-center text-center">
-                <div className="size-11 rounded-xl flex items-center justify-center text-xl mb-1.5" style={{ background: "#21262d" }}>{step.icon}</div>
-                <div className="text-xs font-semibold text-white">{step.label}</div>
-                <div className="text-[10px] text-slate-500">{step.sub}</div>
-              </div>
-              {i < 5 && (
-                <div className="flex items-center mx-2">
-                  <div className="w-8 h-px" style={{ background: "linear-gradient(to right, #25d366, #25d36660)" }} />
-                  <div className="text-emerald-500 text-xs">›</div>
-                </div>
-              )}
-            </div>
-          ))}
         </div>
       </div>
 
@@ -452,7 +405,7 @@ function InvoicesPage() {
   };
 
   return (
-    <div className="p-6 space-y-5 max-w-5xl">
+    <div className="p-6 lg:p-8 space-y-5 w-full">
       <div>
         <h1 className="text-2xl font-bold text-white">Invoice History</h1>
         <p className="text-sm text-slate-400 mt-0.5">{INVOICES.length} invoices · Auto-detected from Vyapar · Stored in Firebase</p>
@@ -566,7 +519,7 @@ function CustomerDetail({ customer, onBack }: { customer: CustomerDoc; onBack: (
   const sentCount = localInvoices.filter(i => i.status === "SENT").length;
 
   return (
-    <div className="p-6 space-y-5 max-w-3xl">
+    <div className="p-6 lg:p-8 space-y-5 w-full">
       <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white transition-colors mb-2">
         <Icons.back />
         Back to Customers
@@ -669,31 +622,12 @@ function CustomersPage() {
   if (selected) return <CustomerDetail customer={selected} onBack={() => setSelected(null)} />;
 
   return (
-    <div className="p-6 space-y-5 max-w-4xl">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Customers</h1>
-          <p className="text-sm text-slate-400 mt-0.5">
-            {customers.length} customers · Auto-saved to Firebase on every invoice
-          </p>
-        </div>
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-amber-500/20 text-xs" style={{ background: "#2d1a00" }}>
-          <Icons.firebase />
-          <span className="text-amber-400 font-medium">{isConfigured ? "Live — Firestore" : "Demo — Connect Firebase"}</span>
-        </div>
-      </div>
-
-      {/* How it works callout */}
-      <div className="rounded-xl border border-[#25d366]/20 px-5 py-4" style={{ background: "#0d2b1a" }}>
-        <div className="text-xs font-semibold text-emerald-400 mb-1.5">How customers are saved</div>
-        <div className="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
-          {["Invoice detected by Agent", "Customer info extracted from PDF", "Upsert to Firestore /customers/{mobile}", "New customer → created · Returning → invoice count +1 & spend updated"].map((step, i) => (
-            <div key={step} className="flex items-center gap-2">
-              {i > 0 && <span className="text-slate-600">→</span>}
-              <span className={i === 3 ? "text-emerald-400" : ""}>{step}</span>
-            </div>
-          ))}
-        </div>
+    <div className="p-6 lg:p-8 space-y-5 w-full">
+      <div>
+        <h1 className="text-2xl font-bold text-white">Customers</h1>
+        <p className="text-sm text-slate-400 mt-0.5">
+          {customers.length} total customer records
+        </p>
       </div>
 
       {/* Search */}
@@ -712,59 +646,69 @@ function CustomersPage() {
         <div className="text-sm text-slate-500 text-center py-8">Loading from Firebase…</div>
       )}
 
-      {/* Customer grid */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {filtered.map(c => {
-          const invoiceCount = INVOICES.filter(i => i.mobile === c.mobile).length;
-          const spend = INVOICES.filter(i => i.mobile === c.mobile).reduce((s, i) => s + i.amount, 0);
-          const isNew = invoiceCount === 1;
-          return (
-            <button
-              key={c.id}
-              onClick={() => setSelected(c)}
-              className="rounded-xl border border-[#30363d] p-4 text-left hover:border-[#25d366]/40 transition-all hover:bg-[#25d366]/3 group"
-              style={{ background: "#161b22" }}
-            >
-              <div className="flex items-start gap-3">
-                <Avatar name={c.name} />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-white truncate">{c.name}</span>
-                    {isNew && (
-                      <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-full border border-emerald-500/30 text-emerald-400" style={{ background: "#0d2b1a" }}>New</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-1 mt-0.5 text-xs text-slate-500 font-mono">
-                    <Icons.phone />
-                    {c.mobile}
-                  </div>
-                </div>
-                <span className="text-slate-600 group-hover:text-[#25d366] transition-colors text-lg leading-none">›</span>
-              </div>
-              <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-[#30363d]">
-                <div>
-                  <div className="text-[10px] text-slate-600 uppercase tracking-wider">Invoices</div>
-                  <div className="text-sm font-bold text-white">{invoiceCount}</div>
-                </div>
-                <div>
-                  <div className="text-[10px] text-slate-600 uppercase tracking-wider">Total Spend</div>
-                  <div className="text-sm font-bold text-[#25d366]">₹{spend.toLocaleString("en-IN")}</div>
-                </div>
-                <div>
-                  <div className="text-[10px] text-slate-600 uppercase tracking-wider">Last Invoice</div>
-                  <div className="text-xs text-slate-400">{c.lastInvoiceDate}</div>
-                </div>
-              </div>
-              {/* Firestore path hint */}
-              <div className="mt-2 font-mono text-[9px] text-slate-700">
-                /customers/{c.mobile}
-              </div>
-            </button>
-          );
-        })}
-        {filtered.length === 0 && (
-          <div className="col-span-2 py-12 text-center text-slate-500 text-sm">No customers found.</div>
-        )}
+      {/* Customer Full Width Table / List View */}
+      <div className="rounded-xl border border-[#30363d] overflow-hidden" style={{ background: "#161b22" }}>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-[#30363d]">
+              {["Customer Name", "Mobile Number", "Total Invoices", "Total Spend", "Last Invoice Date", "Firestore Path", "Action"].map(h => (
+                <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#21262d]">
+            {filtered.map(c => {
+              const invoiceCount = INVOICES.filter(i => i.mobile === c.mobile).length;
+              const spend = INVOICES.filter(i => i.mobile === c.mobile).reduce((s, i) => s + i.amount, 0);
+              const isNew = invoiceCount === 1;
+              return (
+                <tr key={c.id} onClick={() => setSelected(c)} className="hover:bg-[#25d366]/5 transition-colors cursor-pointer group">
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-3">
+                      <Avatar name={c.name} />
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-white group-hover:text-[#25d366] transition-colors">{c.name}</span>
+                          {isNew && (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-full border border-emerald-500/30 text-emerald-400" style={{ background: "#0d2b1a" }}>New</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-5 py-3.5 font-mono text-xs text-slate-300">
+                    <div className="flex items-center gap-1.5">
+                      <Icons.phone />
+                      {c.mobile}
+                    </div>
+                  </td>
+                  <td className="px-5 py-3.5 text-xs font-bold text-white">
+                    {invoiceCount}
+                  </td>
+                  <td className="px-5 py-3.5 font-mono text-xs font-bold text-[#25d366]">
+                    ₹{spend.toLocaleString("en-IN")}
+                  </td>
+                  <td className="px-5 py-3.5 text-xs text-slate-400">
+                    {c.lastInvoiceDate}
+                  </td>
+                  <td className="px-5 py-3.5 font-mono text-[10px] text-slate-500">
+                    /customers/{c.mobile}
+                  </td>
+                  <td className="px-5 py-3.5 text-xs text-right">
+                    <span className="text-slate-400 group-hover:text-[#25d366] font-medium flex items-center gap-1 justify-end">
+                      View Detail →
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+            {filtered.length === 0 && (
+              <tr>
+                <td colSpan={7} className="py-12 text-center text-slate-500 text-sm">No customers found.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
@@ -906,7 +850,7 @@ function CampaignsPage() {
 
   if (view === "create") {
     return (
-      <div className="p-6 space-y-5 max-w-2xl">
+      <div className="p-6 lg:p-8 space-y-5 w-full">
         <div className="flex items-center gap-3">
           <button onClick={() => { setView("list"); setSent(false); setPreview(false); }} className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white transition-colors">
             <Icons.back />
@@ -978,7 +922,7 @@ function CampaignsPage() {
   }
 
   return (
-    <div className="p-6 space-y-5 max-w-4xl">
+    <div className="p-6 lg:p-8 space-y-5 w-full">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Campaigns</h1>
@@ -1118,8 +1062,6 @@ function SettingsPage() {
   });
   const [fileTypes, setFileTypes] = useState({ pdf: true, xlsx: true, csv: false });
 
-  const [waBusiness, setWaBusiness] = useState("My Store");
-  const [waPhone, setWaPhone] = useState("+91 98765 43210");
   const [saved, setSaved] = useState(false);
 
   // Folder Browser Modal state
@@ -1159,36 +1101,42 @@ function SettingsPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-2xl">
+    <div className="p-6 lg:p-8 space-y-6 w-full">
       <div>
         <h1 className="text-2xl font-bold text-white">Settings</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Agent configuration & WhatsApp setup</p>
+        <p className="text-sm text-slate-400 mt-0.5">Background Agent & invoice folder targeting configuration</p>
+      </div>
+
+      {/* Automation Workflow */}
+      <div className="rounded-xl border border-[#30363d] p-5" style={{ background: "#161b22" }}>
+        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Automation Workflow</div>
+        <div className="flex items-center gap-0 overflow-x-auto">
+          {[
+            { icon: "📄", label: "Vyapar", sub: "Generate bill" },
+            { icon: "💾", label: "Download", sub: "Invoice PDF" },
+            { icon: "🤖", label: "Agent", sub: "Detect & extract" },
+            { icon: "⚙️", label: "Backend", sub: "Process & check" },
+            { icon: "🔥", label: "Firebase", sub: "Store customer" },
+            { icon: "💬", label: "WhatsApp", sub: "Send invoice" },
+          ].map((step, i) => (
+            <div key={step.label} className="flex items-center shrink-0">
+              <div className="flex flex-col items-center text-center">
+                <div className="size-11 rounded-xl flex items-center justify-center text-xl mb-1.5" style={{ background: "#21262d" }}>{step.icon}</div>
+                <div className="text-xs font-semibold text-white">{step.label}</div>
+                <div className="text-[10px] text-slate-500">{step.sub}</div>
+              </div>
+              {i < 5 && (
+                <div className="flex items-center mx-2">
+                  <div className="w-8 h-px" style={{ background: "linear-gradient(to right, #25d366, #25d36660)" }} />
+                  <div className="text-emerald-500 text-xs">›</div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="space-y-4">
-        {/* Firebase status */}
-        <div className="rounded-xl border border-[#30363d] p-5" style={{ background: "#161b22" }}>
-          <div className="flex items-center gap-2 mb-3">
-            <Icons.firebase />
-            <span className="text-sm font-semibold text-white">Firebase / Firestore</span>
-          </div>
-          <div className={`flex items-center gap-3 p-3 rounded-lg border ${isConfigured ? "border-amber-500/20" : "border-red-500/20"}`} style={{ background: "#21262d" }}>
-            <span className={`size-2 rounded-full ${isConfigured ? "bg-amber-400" : "bg-red-400"}`} />
-            <div>
-              <div className={`text-sm font-medium ${isConfigured ? "text-amber-400" : "text-red-400"}`}>
-                {isConfigured ? "Connected" : "Not Connected"}
-              </div>
-              <div className="text-xs text-slate-500 mt-0.5">
-                {isConfigured ? "Customers & invoices syncing to Firestore" : "Add VITE_FIREBASE_* env vars to connect"}
-              </div>
-            </div>
-          </div>
-          <div className="mt-3 space-y-1">
-            <div className="text-[10px] text-slate-600 font-mono">firestore / customers / {"{mobile}"} — updated on every invoice</div>
-            <div className="text-[10px] text-slate-600 font-mono">firestore / invoices / {"{invoiceNo}"} — created on detection</div>
-          </div>
-        </div>
-
         {/* Background Agent Invoice Folder Config */}
         <div className="rounded-xl border border-[#30363d] p-5 space-y-4" style={{ background: "#161b22" }}>
           <div className="flex items-center justify-between mb-1">
@@ -1343,40 +1291,6 @@ function SettingsPage() {
           </div>
         )}
 
-        {/* WhatsApp */}
-        <div className="rounded-xl border border-[#30363d] p-5 space-y-4" style={{ background: "#161b22" }}>
-          <div className="flex items-center gap-2 mb-1">
-            <Icons.whatsapp />
-            <span className="text-sm font-semibold text-white">WhatsApp Business</span>
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Business Name</label>
-            <input value={waBusiness} onChange={e => setWaBusiness(e.target.value)} className="w-full px-3.5 py-2.5 rounded-lg text-sm text-white outline-none border border-[#30363d] focus:border-[#25d366] transition-colors" style={{ background: "#0d1117" }} />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">WhatsApp Business Number</label>
-            <input value={waPhone} onChange={e => setWaPhone(e.target.value)} className="w-full px-3.5 py-2.5 rounded-lg text-sm text-white outline-none border border-[#30363d] focus:border-[#25d366] transition-colors font-mono" style={{ background: "#0d1117" }} />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">API Token</label>
-            <input type="password" value="EAAKxxxxxxxxxxxxxxxx" readOnly className="w-full px-3.5 py-2.5 rounded-lg text-sm text-slate-500 outline-none border border-[#30363d] font-mono" style={{ background: "#0d1117" }} />
-            <p className="text-xs text-slate-600 mt-1.5">Stored in environment variables. Never exposed to the frontend.</p>
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Duplicate Prevention</label>
-          <div className="rounded-xl border border-[#30363d] p-4 flex items-center justify-between" style={{ background: "#161b22" }}>
-            <div>
-              <div className="text-sm text-slate-300">Block duplicate sends</div>
-              <div className="text-xs text-slate-500">Checks Firebase before every WhatsApp send</div>
-            </div>
-            <div className="size-10 rounded-full flex items-center justify-center" style={{ background: "#25d36620", border: "2px solid #25d366" }}>
-              <span className="text-emerald-400 text-xs font-bold">ON</span>
-            </div>
-          </div>
-        </div>
-
         <button onClick={handleSave} className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-[#0d1117] transition-all" style={{ background: saved ? "#128c7e" : "#25d366" }}>
           {saved ? "✓ Saved!" : "Save Settings"}
         </button>
@@ -1393,7 +1307,7 @@ function Shell() {
   return (
     <div className="flex min-h-screen" style={{ background: "#0d1117" }}>
       <Sidebar page={page} setPage={setPage} />
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 min-w-0 overflow-y-auto">
         {page === "dashboard" && <DashboardPage setPage={setPage} />}
         {page === "invoices" && <InvoicesPage />}
         {page === "customers" && <CustomersPage />}
