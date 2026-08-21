@@ -1,0 +1,10 @@
+{
+  "description": "This web application streamlines project management for developers, offering intuitive tools for collaboration, task tracking, and code sharing.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
