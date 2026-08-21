@@ -411,28 +411,44 @@ function InvoicesPage() {
         <p className="text-sm text-slate-400 mt-0.5">{INVOICES.length} invoices · Auto-detected from Vyapar · Stored in Firebase</p>
       </div>
 
-      <div className="flex items-center gap-3 flex-wrap">
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"><Icons.search /></span>
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        {/* Segmented Tab Filter */}
+        <div className="inline-flex items-center gap-1 p-1 rounded-xl border border-[#30363d]" style={{ background: "#161b22" }}>
+          {(["ALL", "SENT", "PENDING", "FAILED", "DUPLICATE"] as const).map(s => {
+            const isActive = filter === s;
+            return (
+              <button
+                key={s}
+                onClick={() => setFilter(s)}
+                className={`flex items-center px-3.5 py-1.5 rounded-lg text-xs transition-all ${
+                  isActive
+                    ? "bg-[#25d366]/15 text-[#25d366] border border-[#25d366]/40 font-semibold shadow-xs"
+                    : "text-slate-400 hover:text-white hover:bg-[#21262d] border border-transparent font-medium"
+                }`}
+              >
+                <span>{s}</span>
+                <span
+                  className={`ml-1.5 px-1.5 py-0.5 rounded text-[11px] font-mono font-bold ${
+                    isActive ? "bg-[#25d366]/25 text-[#25d366]" : "bg-[#30363d] text-slate-400"
+                  }`}
+                >
+                  {counts[s]}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Search Bar on Right */}
+        <div className="relative w-full sm:w-72">
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"><Icons.search /></span>
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search invoice, customer, mobile…"
-            className="pl-9 pr-4 py-2 rounded-lg text-sm text-white outline-none border border-[#30363d] focus:border-[#25d366] transition-colors w-64"
+            className="w-full pl-9.5 pr-4 py-2 rounded-xl text-sm text-white placeholder:text-slate-500 outline-none border border-[#30363d] focus:border-[#25d366] focus:ring-2 focus:ring-[#25d366]/20 transition-all font-mono"
             style={{ background: "#161b22" }}
           />
-        </div>
-        <div className="flex items-center gap-1.5 flex-wrap">
-          {(["ALL", "SENT", "PENDING", "FAILED", "DUPLICATE"] as const).map(s => (
-            <button
-              key={s}
-              onClick={() => setFilter(s)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${filter === s ? "border-[#25d366] text-[#25d366]" : "border-[#30363d] text-slate-400 hover:text-white hover:border-[#8b949e]"}`}
-              style={filter === s ? { background: "#25d36615" } : { background: "#161b22" }}
-            >
-              {s} <span className="opacity-60">{counts[s]}</span>
-            </button>
-          ))}
         </div>
       </div>
 
